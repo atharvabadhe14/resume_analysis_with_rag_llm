@@ -1,0 +1,27 @@
+# Core Web Framework
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# AI/ML Libraries
+sentence-transformers==2.2.2
+transformers==4.35.2
+torch==2.1.1
+faiss-cpu==1.7.4
+numpy==1.24.3
+
+# Document Processing
+PyMuPDF==1.23.8
+pytesseract==0.3.10
+Pillow==10.1.0
+
+# Database
+sqlite3  # Built-in with Python
+
+# HTTP Requests
+requests==2.31.0
+
+# Additional Dependencies
+pathlib  # Built-in with Python 3.4+
+hashlib  # Built-in with Python
+datetime  # Built-in with Python
+json  # Built-in with Python
