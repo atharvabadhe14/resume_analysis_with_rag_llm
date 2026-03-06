@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIRE - Search Candidates</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f5f7fa;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar h1 {
+            font-size: 1.8em;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .search-header {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .search-header h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .db-info {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .db-info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .search-options {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .search-options label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            cursor: pointer;
+        }
+        
+        input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+        
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        #results-section {
+            display: none;
+        }
+        
+        .results-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .results-header h3 {
+            color: #333;
+            font-size: 1.5em;
+        }
+        
+        .candidate-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .candidate-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .candidate-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .candidate-name {
+            font-size: 1.4em;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .match-score {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .candidate-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .section h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .section ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .section li {
+            padding: 8px 0;
+            color: #666;
+            display: flex;
+            align-items: start;
+            gap: 8px;
+        }
+        
+        .section li:before {
+            content: "•";
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🎯 HIRE</h1>
+        <div class="user-info">
+            <span>👤 {{ username }}</span>
+            <a href="/dashboard" class="btn btn-secondary">Dashboard</a>
+            <a href="/logout" class="btn btn-secondary">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="search-header">
+            <h2>🔍 Search for Candidates</h2>
+            
+            <div class="db-info">
+                <div class="db-info-item">
+                    <strong>Database:</strong> {{ db_name }}
+                </div>
+                <div class="db-info-item">
+                    <strong>Total Resumes:</strong> {{ resume_count }}
+                </div>
+            </div>
+            
+            <textarea id="job-description" 
+                      placeholder="Enter your job description here... Be specific about skills, experience, and requirements."
+                      rows="6"></textarea>
+            
+            <div class="search-options">
+                <label>
+                    <span>Top Results:</span>
+                    <input type="number" id="top-k" value="5" min="1" max="20">
+                </label>
+                
+                <label>
+                    <input type="checkbox" id="use-llm">
+                    <span>Use AI Analysis (requires Ollama)</span>
+                </label>
+            </div>
+            
+            <button class="btn btn-primary" onclick="searchCandidates()">
+                Search Candidates
+            </button>
+        </div>
+        
+        <div id="results-section">
+            <div class="results-header">
+                <h3 id="results-title"></h3>
+            </div>
+            
+            <div id="results-container"></div>
+        </div>
+    </div>
+
+    <script>
+        async function searchCandidates() {
+            const jobDescription = document.getElementById('job-description').value.trim();
+            const topK = document.getElementById('top-k').value;
+            const useLlm = document.getElementById('use-llm').checked;
+            
+            if (!jobDescription) {
+                alert('Please enter a job description!');
+                return;
+            }
+            
+            const resultsSection = document.getElementById('results-section');
+            const resultsContainer = document.getElementById('results-container');
+            const resultsTitle = document.getElementById('results-title');
+            
+            resultsSection.style.display = 'block';
+            resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div><p>Searching for candidates...</p></div>';
+            
+            try {
+                const response = await fetch('/api/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        db_id: {{ db_id }},
+                        job_description: jobDescription,
+                        top_k: topK,
+                        use_llm: useLlm
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultsContainer.innerHTML = `<div class="error">${data.error}</div>`;
+                    return;
+                }
+                
+                if (data.candidates.length === 0) {
+                    resultsContainer.innerHTML = '<div class="loading"><p>No candidates found.</p></div>';
+                    return;
+                }
+                
+                resultsTitle.textContent = `Found ${data.candidates.length} Candidates`;
+                resultsContainer.innerHTML = '';
+                
+                if (data.analyzed) {
+                    data.candidates.forEach((candidate, index) => {
+                        const card = createAnalyzedCard(candidate, index + 1);
+                        resultsContainer.appendChild(card);
+                    });
+                } else {
+                    data.candidates.forEach((candidate, index) => {
+                        const card = createSimpleCard(candidate, index + 1);
+                        resultsContainer.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                resultsContainer.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
+        }
+        
+        function createAnalyzedCard(candidate, rank) {
+            const card = document.createElement('div');
+            card.className = 'candidate-card';
+            
+            const strengthsList = candidate.strengths.map(s => `<li>${s}</li>`).join('');
+            const gapsList = candidate.gaps.map(g => `<li>${g}</li>`).join('');
+            
+            card.innerHTML = `
+                <div class="candidate-header">
+                    <div>
+                        <div style="color: #999; margin-bottom: 5px;">Rank #${rank}</div>
+                        <div class="candidate-name">${candidate.candidate_name}</div>
+                    </div>
+                    <div class="match-score">Score: ${candidate.match_score}</div>
+                </div>
+                
+                <div class="candidate-content">
+                    <div class="section">
+                        <h4>💪 Strengths</h4>
+                        <ul>${strengthsList || '<li>No strengths listed</li>'}</ul>
+                    </div>
+                    
+                    <div class="section">
+                        <h4>📉 Gaps</h4>
+                        <ul>${gapsList || '<li>No gaps listed</li>'}</ul>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h4>📝 Summary</h4>
+                    <div class="summary">${candidate.summary}</div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        function createSimpleCard(candidate, rank) {
+            const card = document.createElement('div');
+            card.className = 'candidate-card';
+            
+            card.innerHTML = `
+                <div class="candidate-header">
+                    <div>
+                        <div style="color: #999; margin-bottom: 5px;">Rank #${rank}</div>
+                        <div class="candidate-name">${candidate.candidate_name}</div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h4>📄 File</h4>
+                    <p style="color: #666;">${candidate.file_path}</p>
+                </div>
+                
+                <div class="section">
+                    <h4>📝 Resume Preview</h4>
+                    <div class="summary">${candidate.resume_preview}</div>
+                </div>
+            `;
+            
+            return card;
+        }
+    </script>
+</body>
+</html>
